@@ -1,16 +1,32 @@
 ---
 
 endpoints:
-  - name: website
-    url: "https://twin.sh/health"
-    conditions:
-      - "[STATUS] == 200"
-      - "[BODY].status == UP"
-      - "[RESPONSE_TIME] < 300"
 
-  - name: make-sure-header-is-rendered
-    url: "https://example.org/"
+  - name: n8n
+    group: services
+    url: "https://n8n.xcc.tw"
     interval: 60s
     conditions:
       - "[STATUS] == 200"
-      - "[BODY] == pat(*<h2>Example Domain</h2>*)"
+      - "[BODY] == pat(*<title>*n8n*</title>*)"
+
+  - name: PDF
+    group: services
+    url: "https://pdf.xcc.tw"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: Portal
+    group: services
+    url: "https://portal.xcc.tw"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: Hushtimer
+    group: API
+    url: "https://hushtimer.xcc.tw/version"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
