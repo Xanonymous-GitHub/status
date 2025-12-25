@@ -1,0 +1,66 @@
+---
+
+name: Validate Gatus config
+
+on:
+  push:
+    paths:
+      - "config/**"
+      - ".github/workflows/config-validate.yml.yml"
+  pull_request:
+    paths:
+      - "config/**"
+      - ".github/workflows/config-validate.yml.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Ensure config exists
+        run: |
+          set -euo pipefail
+          test -f config/config.yaml
+
+      - name: Pull Gatus stable image (GHCR)
+        run: |
+          set -euo pipefail
+          docker pull ghcr.io/twin/gatus:stable
+
+      - name: Boot Gatus with repo config and fail if it crashes
+        run: |
+          set -euo pipefail
+
+          CID_NAME="gatus-config-ci"
+          CONFIG_PATH="${GITHUB_WORKSPACE}/config/config.yaml"
+
+          # Start container in background. If config is invalid, it should exit quickly.
+          docker run -d --rm \
+            --name "${CID_NAME}" \
+            -e GATUS_CONFIG_PATH=/config/config.yaml \
+            -e GATUS_LOG_LEVEL=INFO \
+            -v "${CONFIG_PATH}:/config/config.yaml:ro" \
+            -p 127.0.0.1:18080:8080 \
+            ghcr.io/twin/gatus:stable
+
+          # Give it a moment to parse config / start.
+          sleep 5
+
+          # If it exited, show logs + fail.
+          if ! docker ps --format '{{.Names}}' | grep -qx "${CID_NAME}"; then
+            echo "Gatus exited during startup (likely invalid/missing config). Logs:"
+            docker logs "${CID_NAME}" || true
+            exit 1
+          fi
+
+          # Optional: a quick HTTP sanity check that the web server is up (not endpoint health).
+          curl -fsS http://127.0.0.1:18080/ >/dev/null
+
+          # Cleanup
+          docker stop "${CID_NAME}" >/dev/null
