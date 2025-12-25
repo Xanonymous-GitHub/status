@@ -4,13 +4,11 @@ name: Validate Gatus config
 
 on:
   push:
-    paths:
-      - "config/**"
-      - ".github/workflows/config-validate.yml"
+    branches:
+      - main
   pull_request:
-    paths:
-      - "config/**"
-      - ".github/workflows/config-validate.yml"
+    branches:
+      - main
 
 permissions:
   contents: read
