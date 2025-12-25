@@ -1,0 +1,16 @@
+---
+
+endpoints:
+  - name: website
+    url: "https://twin.sh/health"
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].status == UP"
+      - "[RESPONSE_TIME] < 300"
+
+  - name: make-sure-header-is-rendered
+    url: "https://example.org/"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY] == pat(*<h1>Example Domain</h1>*)"
