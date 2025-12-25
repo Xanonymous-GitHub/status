@@ -6,11 +6,11 @@ on:
   push:
     paths:
       - "config/**"
-      - ".github/workflows/config-validate.yml.yml"
+      - ".github/workflows/config-validate.yml"
   pull_request:
     paths:
       - "config/**"
-      - ".github/workflows/config-validate.yml.yml"
+      - ".github/workflows/config-validate.yml"
 
 permissions:
   contents: read
