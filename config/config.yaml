@@ -10,7 +10,7 @@ endpoints:
 
   - name: make-sure-header-is-rendered
     url: "https://example.org/"
-    interval: 60x  # INTENTIONAL: invalid duration to force Gatus startup/config parse failure in CI
+    interval: 60s
     conditions:
       - "[STATUS] == 200"
       - "[BODY] == pat(*<h2>Example Domain</h2>*)"
