@@ -1,5 +1,16 @@
 ---
 
+ui:
+  title: "Health Status ǀ XCC"
+  description: "This page provides the real-time operational status and recent availability history of XCC services. If you encounter any issues, please check here first to see whether it is a system-wide incident."
+  header: "XCC Service"
+  dashboard-heading: "Health Status"
+  dashboard-subheading: "Monitor the health of XCC service in real-time"
+  logo: https://raw.githubusercontent.com/Xanonymous-GitHub/status/refs/heads/main/images/normal_cat_what.png
+  dark-mode: true
+  default-sort-by: group
+
+
 endpoints:
 
   - name: n8n
@@ -25,7 +36,7 @@ endpoints:
       - "[STATUS] == 200"
 
   - name: Hushtimer
-    group: API
+    group: XCC API
     url: "https://hushtimer.xcc.tw/version"
     interval: 60s
     conditions:
