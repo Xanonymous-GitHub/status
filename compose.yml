@@ -1,4 +1,7 @@
 ---
+volumes:
+  postgres_storage: {}
+
 
 services:
 
@@ -7,21 +10,20 @@ services:
     container_name: gatus-postgres
     restart: unless-stopped
     pull_policy: always
-
+ 
     ports:
       - "127.0.0.1:5432:5432"
 
-    environment:
-      - POSTGRES_DB=gatus-postgres
-      - POSTGRES_USER=username
-      - POSTGRES_PASSWORD=password
+    env_file:
+      - path: .env
+        required: true
 
     volumes:
-      - ./data/db:/var/lib/postgresql/data:rw
+      - postgres_storage:/var/lib/postgresql/data:rw
       - ./secrets:/run/secrets:ro
 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U username -d gatus-postgres -t 5"]
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U ${POSTGRES_USER} -d ${POSTGRES_DB} -t 5"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -47,14 +49,15 @@ services:
     # Keep it private by default; put your reverse proxy in front if needed
     ports:
       - "127.0.0.1:8080:8080"
+    
+    env_file:
+      - path: .env
+        required: true
 
     environment:
       TZ: Asia/Taipei
       # By default, Gatus expects config/config.yaml; we point it at /config/config.yaml
       GATUS_CONFIG_PATH: /config/config.yaml
-      POSTGRES_DB: gatus
-      POSTGRES_USER: username
-      POSTGRES_PASSWORD: password
 
     volumes:
       - ./config:/config:ro
