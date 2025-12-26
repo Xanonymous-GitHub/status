@@ -32,8 +32,8 @@ jobs:
 
           cleanup() {
             # Always attempt to dump logs to help debugging, then tear down.
-            docker compose -f compose.yaml logs --no-color || true
-            docker compose -f compose.yaml down -v || true
+            docker compose -f compose.yml logs --no-color || true
+            docker compose -f compose.yml down -v || true
           }
           trap cleanup EXIT
 
@@ -46,12 +46,12 @@ jobs:
           EOF
 
           # 2) Static validation (resolve interpolation + compose model)
-          docker compose -f compose.yaml config --environment >/dev/null
-          docker compose -f compose.yaml config -q
+          docker compose -f compose.yml config --environment >/dev/null
+          docker compose -f compose.yml config -q
 
           # 3) Boot stack (wait for healthchecks if supported)
           # NOTE: `--wait` implies detached mode and waits for services to be running/healthy.
-          docker compose -f compose.yaml up -d --wait
+          docker compose -f compose.yml up -d --wait
 
           # 4) Sanity check (gatus up)
           curl -fsS --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8080/ >/dev/null
