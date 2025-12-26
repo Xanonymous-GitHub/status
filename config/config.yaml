@@ -11,6 +11,11 @@ ui:
   default-sort-by: group
 
 
+storage:
+  type: postgres
+  path: "postgres://username:password@postgres:5432/gatus-postgres?sslmode=disable"
+
+
 endpoints:
 
   - name: n8n
