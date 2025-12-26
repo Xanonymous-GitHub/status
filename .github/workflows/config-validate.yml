@@ -1,6 +1,6 @@
 ---
 
-name: Validate Gatus config
+name: Validate Compose & Gatus config
 
 on:
   push:
@@ -26,39 +26,32 @@ jobs:
           set -euo pipefail
           test -f config/config.yaml
 
-      - name: Pull Gatus stable image (GHCR)
-        run: |
-          set -euo pipefail
-          docker pull ghcr.io/twin/gatus:stable
-
-      - name: Boot Gatus with repo config and fail if it crashes
+      - name: Validate compose + gatus config (with postgres)
         run: |
           set -euo pipefail
 
-          CID_NAME="gatus-config-ci"
-          CONFIG_PATH="${GITHUB_WORKSPACE}/config/config.yaml"
+          cleanup() {
+            # Always attempt to dump logs to help debugging, then tear down.
+            docker compose -f compose.yaml logs --no-color || true
+            docker compose -f compose.yaml down -v || true
+          }
+          trap cleanup EXIT
 
-          # Start container in background. If config is invalid, it should exit quickly.
-          docker run -d --rm \
-            --name "${CID_NAME}" \
-            -e GATUS_CONFIG_PATH=/config/config.yaml \
-            -e GATUS_LOG_LEVEL=INFO \
-            -v "${CONFIG_PATH}:/config/config.yaml:ro" \
-            -p 127.0.0.1:18080:8080 \
-            ghcr.io/twin/gatus:stable
+          # 1) Create .env for CI (dummy secrets or GitHub Secrets)
+          cat > .env <<'EOF'
+          POSTGRES_DB=gatus
+          POSTGRES_USER=gatus
+          POSTGRES_PASSWORD=ci_dummy_password
+          GATUS_LOG_LEVEL=DEBUG
+          EOF
 
-          # Give it a moment to parse config / start.
-          sleep 5
+          # 2) Static validation (resolve interpolation + compose model)
+          docker compose -f compose.yaml config --environment >/dev/null
+          docker compose -f compose.yaml config -q
 
-          # If it exited, show logs + fail.
-          if ! docker ps --format '{{.Names}}' | grep -qx "${CID_NAME}"; then
-            echo "Gatus exited during startup (likely invalid/missing config). Logs:"
-            docker logs "${CID_NAME}" || true
-            exit 1
-          fi
+          # 3) Boot stack (wait for healthchecks if supported)
+          # NOTE: `--wait` implies detached mode and waits for services to be running/healthy.
+          docker compose -f compose.yaml up -d --wait
 
-          # Optional: a quick HTTP sanity check that the web server is up (not endpoint health).
-          curl -fsS http://127.0.0.1:18080/ >/dev/null
-
-          # Cleanup
-          docker stop "${CID_NAME}" >/dev/null
+          # 4) Sanity check (gatus up)
+          curl -fsS --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:8080/ >/dev/null
