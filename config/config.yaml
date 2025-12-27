@@ -66,5 +66,8 @@ endpoints:
     conditions:
       - "[STATUS] == 200"
       - "[BODY].online == true"
+      - "[BODY].players.max > 0"
+      - "[BODY].version != \"\""
+      - "[BODY].motd.clean[0] == pat(*Welcome*)"
     ui:
       <<: *hide_url
