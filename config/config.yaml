@@ -48,3 +48,12 @@ endpoints:
     interval: 60s
     conditions:
       - "[STATUS] == 200"
+
+  - name: Minecraft Server
+    group: XCC Games
+    url: "https://api.mcsrvstat.us/3/mc.xcc.tw"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].online == true"
+
