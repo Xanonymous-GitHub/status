@@ -1,5 +1,13 @@
 ---
 
+definition:
+  endpoint_ui:
+    hide_url: &hide_url
+      hide-url: true
+      hide-hostname: true
+      hide-port: true
+
+
 ui:
   title: "Health Status ǀ XCC"
   description: "This page provides the real-time operational status and recent availability history of XCC services. If you encounter any issues, please check here first to see whether it is a system-wide incident."
@@ -49,9 +57,7 @@ endpoints:
     conditions:
       - "[STATUS] == 200"
     ui:
-      hide-url: true
-      hide-hostname: true
-      hide-port: true
+      <<: *hide_url
 
   - name: Minecraft Server
     group: XCC Games
@@ -61,6 +67,4 @@ endpoints:
       - "[STATUS] == 200"
       - "[BODY].online == true"
     ui:
-      hide-url: true
-      hide-hostname: true
-      hide-port: true
+      <<: *hide_url
