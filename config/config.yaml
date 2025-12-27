@@ -48,6 +48,10 @@ endpoints:
     interval: 60s
     conditions:
       - "[STATUS] == 200"
+    ui:
+      hide-url: true
+      hide-hostname: true
+      hide-port: true
 
   - name: Minecraft Server
     group: XCC Games
@@ -56,4 +60,7 @@ endpoints:
     conditions:
       - "[STATUS] == 200"
       - "[BODY].online == true"
-
+    ui:
+      hide-url: true
+      hide-hostname: true
+      hide-port: true
