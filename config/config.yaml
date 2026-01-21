@@ -26,6 +26,10 @@ ui:
   dashboard-heading: "Health Status"
   dashboard-subheading: "Monitor the health of XCC service in real-time"
   logo: https://raw.githubusercontent.com/Xanonymous-GitHub/status/refs/heads/main/images/normal_cat_what.png
+  favicon:
+    default: https://raw.githubusercontent.com/Xanonymous-GitHub/status/refs/heads/main/images/favicon.ico
+    size16x16: https://raw.githubusercontent.com/Xanonymous-GitHub/status/refs/heads/main/images/favicon-16x16.ico
+    size32x32: https://raw.githubusercontent.com/Xanonymous-GitHub/status/refs/heads/main/images/favicon-32x32.ico
   dark-mode: true
   default-sort-by: group
 
