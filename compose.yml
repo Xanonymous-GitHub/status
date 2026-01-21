@@ -25,7 +25,7 @@ services:
       retries: 10
 
   gatus:
-    image: ghcr.io/twin/gatus:stable
+    image: ghcr.io/twin/gatus:latest
     container_name: gatus
     restart: unless-stopped
     pull_policy: always
