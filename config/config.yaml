@@ -50,6 +50,13 @@ endpoints:
       - type: discord
         description: "Health Check Failed - n8n.xcc.tw is down"
 
+  - name: Jenkins
+    group: services
+    url: "https://jenkins.xcc.tw"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
+
   - name: PDF
     group: services
     url: "https://pdf.xcc.tw"
