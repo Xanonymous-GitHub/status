@@ -57,6 +57,13 @@ endpoints:
     conditions:
       - "[STATUS] == 200"
 
+  - name: Grafana
+    group: services
+    url: "https://grafane.xcc.tw"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
+
   - name: PDF
     group: services
     url: "https://pdf.xcc.tw"
