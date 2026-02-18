@@ -59,7 +59,7 @@ endpoints:
 
   - name: Grafana
     group: services
-    url: "https://grafane.xcc.tw"
+    url: "https://grafana.xcc.tw"
     interval: 60s
     conditions:
       - "[STATUS] == 200"
