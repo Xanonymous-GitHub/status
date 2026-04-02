@@ -82,15 +82,6 @@ endpoints:
     conditions:
       - "[STATUS] == 200"
 
-  - name: Hushtimer
-    group: XCC API
-    url: "https://hushtimer.xcc.tw/version"
-    interval: 60s
-    conditions:
-      - "[STATUS] == 200"
-    ui:
-      <<: *hide_url
-
   - name: Minecraft Server
     group: XCC Games
     url: "https://api.mcsrvstat.us/3/mc.xcc.tw"
