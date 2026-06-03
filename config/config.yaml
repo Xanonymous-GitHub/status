@@ -54,13 +54,6 @@ endpoints:
       - type: discord
         description: "Health Check Failed - n8n.xcc.tw is down"
 
-  - name: Jenkins
-    group: services
-    url: "https://jenkins.xcc.tw"
-    interval: 60s
-    conditions:
-      - "[STATUS] == 200"
-
   - name: Grafana
     group: services
     url: "https://grafana.xcc.tw"
